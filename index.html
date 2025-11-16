@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Management System - Admin Portal (Dark Mode)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="dark bg-slate-900 p-6 min-h-screen font-inter"> 
+
+<div class="container mx-auto my-8">
+    
+    <header class="flex flex-col sm:flex-row items-center justify-between mb-8 pb-4 border-b border-slate-200 dark:border-slate-700">
+        <h1 class="text-4xl font-black text-slate-900 dark:text-white flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap text-indigo-600"><path d="M21.4 17.9c.7.4 1.6-.2 1.6-1V5.7c0-.7-.5-1.4-1.2-1.7l-7-3.5c-.7-.4-1.6-.4-2.3 0l-7 3.5C3.5 4.3 3 5 3 5.7v11.2c0 .8.9 1.4 1.6 1L12 22l9.4-4.1Z"/><path d="M3 5.7L12 22l9.4-4.1"/><path d="M3 5.7v11.2"/><path d="M21 5.7v11.2"/></svg>
+            <span>School Portal</span>
+        </h1>
+        <div class="flex items-center space-x-4 mt-4 sm:mt-0">
+            <div class="relative">
+                <select id="user-type-select" class="px-5 py-3 rounded-full bg-white text-slate-700 cursor-pointer appearance-none pr-10 border border-slate-400 shadow-md focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 dark:bg-slate-700 dark:text-white dark:border-slate-600">
+                    <option value="parent">Parent View (Data Review)</option>
+                    <option value="teacher" selected>Teacher View</option>
+                    <option value="student">Student View</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-700 dark:text-slate-300">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div id="dashboard-container" class="bg-white shadow-xl rounded-3xl p-6 sm:p-10 border border-slate-100 dark:bg-slate-800 dark:border-slate-700">
+        </div>
+    </main>
+</div>
+
+<div id="modal-backdrop" class="hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div id="modal-content" class="bg-white rounded-3xl p-8 max-w-xl w-full relative shadow-2xl border-4 border-indigo-400 transform transition-all duration-300 scale-100 dark:bg-slate-700">
+        <h2 id="modal-title" class="text-3xl font-extrabold mb-6 text-center text-slate-900 dark:text-white"></h2>
+        <form id="student-form" class="space-y-5">
+            <div>
+                <label for="name" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Name</label>
+                <input type="text" id="name" name="name" required class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+            </div>
+            <div>
+                <label for="grade" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Grade</label>
+                <input type="number" id="grade" name="grade" required class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+            </div>
+            <div>
+                <label for="email" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Email</label>
+                <input type="email" id="email" name="email" required class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+            </div>
+            <div>
+                <label for="phone" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Phone</label>
+                <input type="tel" id="phone" name="phone" required class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+            </div>
+            <button type="submit" id="form-submit-btn" class="bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg w-full hover:bg-indigo-700 transition duration-200 shadow-lg active:scale-95">Add Student</button>
+        </form>
+        <button id="modal-close-btn" class="absolute top-4 right-4 bg-red-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-extrabold hover:bg-red-700 transition-colors shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+    </div>
+</div>
+
+<div id="mark-modal-backdrop" class="hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div id="mark-modal-content" class="bg-white rounded-3xl p-8 max-w-sm w-full relative shadow-2xl border-4 border-teal-400 dark:bg-slate-700">
+        <h2 id="mark-modal-title" class="text-3xl font-extrabold mb-6 text-center text-slate-900 dark:text-white">Add Mark</h2>
+        <form id="mark-form" class="space-y-5">
+            <div>
+                <label for="subject" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Subject</label>
+                <input type="text" id="subject" name="subject" required class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+            </div>
+            <div>
+                <label for="score" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Score (0-100)</label>
+                <input type="number" id="score" name="score" required min="0" max="100" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+            </div>
+            <button type="submit" id="mark-form-submit-btn" class="bg-teal-600 text-white font-bold py-3 px-6 rounded-lg w-full hover:bg-teal-700 transition duration-200 shadow-lg active:scale-95">Add Mark</button>
+        </form>
+        <button id="mark-modal-close-btn" class="absolute top-4 right-4 bg-red-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-extrabold hover:bg-red-700 transition-colors shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+    </div>
+</div>
+
+<div id="notice-modal-backdrop" class="hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div id="notice-modal-content" class="bg-white rounded-3xl p-8 max-w-lg w-full relative shadow-2xl border-4 border-indigo-500 transform transition-all duration-300 scale-100 dark:bg-slate-700">
+        <h2 id="notice-modal-title" class="text-3xl font-extrabold mb-6 text-center text-slate-900 dark:text-white">Post New Notice</h2>
+        <form id="notice-form" class="space-y-5">
+            <div>
+                <label for="notice-title" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Title</label>
+                <input type="text" id="notice-title" name="title" required class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+            </div>
+            <div>
+                <label for="notice-date" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Date (e.g., Nov 30, 2024)</label>
+                <input type="text" id="notice-date" name="date" required class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white" value="">
+            </div>
+            <div>
+                <label for="notice-text" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Message</label>
+                <textarea id="notice-text" name="text" rows="4" required class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white"></textarea>
+            </div>
+            <button type="submit" id="notice-form-submit-btn" class="bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg w-full hover:bg-indigo-700 transition duration-200 shadow-lg active:scale-95">Publish Notice</button>
+        </form>
+        <button id="notice-modal-close-btn" class="absolute top-4 right-4 bg-red-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-extrabold hover:bg-red-700 transition-colors shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+    </div>
+</div>
+
+<div id="fee-modal-backdrop" class="hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div id="fee-modal-content" class="bg-white rounded-3xl p-8 max-w-sm w-full relative shadow-2xl border-4 border-indigo-500 transform transition-all duration-300 scale-100 dark:bg-slate-700">
+        <h2 class="text-3xl font-extrabold mb-6 text-center text-slate-900 dark:text-white">Update Fee Payment</h2>
+        <form id="fee-form" class="space-y-5">
+            <div>
+                <label for="fee-month" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Month (e.g., Nov 2024)</label>
+                <input type="text" id="fee-month" name="month" required class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+            </div>
+            <div>
+                <label for="fee-amount" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Amount Paid ($)</label>
+                <input type="number" id="fee-amount" name="amount" required min="1" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+            </div>
+            <div>
+                <label for="fee-status" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Status</label>
+                <select id="fee-status" name="status" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+                    <option value="Paid">Paid</option>
+                    <option value="Pending">Pending</option>
+                </select>
+            </div>
+            <div>
+                <label for="fee-date" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Date Paid (Optional)</label>
+                <input type="text" id="fee-date" name="date" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+            </div>
+            <button type="submit" id="fee-form-submit-btn" class="bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg w-full hover:bg-indigo-700 transition duration-200 shadow-lg active:scale-95">Save Fee</button>
+        </form>
+        <button id="fee-modal-close-btn" class="absolute top-4 right-4 bg-red-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-extrabold hover:bg-red-700 transition-colors shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+    </div>
+</div>
+
+<div id="att-modal-backdrop" class="hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div id="att-modal-content" class="bg-white rounded-3xl p-8 max-w-sm w-full relative shadow-2xl border-4 border-teal-500 transform transition-all duration-300 scale-100 dark:bg-slate-700">
+        <h2 class="text-3xl font-extrabold mb-6 text-center text-slate-900 dark:text-white">Update Attendance</h2>
+        <form id="att-form" class="space-y-5">
+            <div>
+                <label for="att-month" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Month (e.g., Nov 2024)</label>
+                <input type="text" id="att-month" name="month" required class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+            </div>
+            <div>
+                <label for="att-present" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Days Present</label>
+                <input type="number" id="att-present" name="present" required min="0" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+            </div>
+            <div>
+                <label for="att-total" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Total Days Scheduled</label>
+                <input type="number" id="att-total" name="total" required min="1" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+            </div>
+            <button type="submit" id="att-form-submit-btn" class="bg-teal-600 text-white font-bold py-3 px-6 rounded-lg w-full hover:bg-teal-700 transition duration-200 shadow-lg active:scale-95">Save Attendance</button>
+        </form>
+        <button id="att-modal-close-btn" class="absolute top-4 right-4 bg-red-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-extrabold hover:bg-red-700 transition-colors shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+    </div>
+</div>
+
+<div id="assignment-modal-backdrop" class="hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div id="assignment-modal-content" class="bg-white rounded-3xl p-8 max-w-lg w-full relative shadow-2xl border-4 border-orange-500 transform transition-all duration-300 scale-100 dark:bg-slate-700">
+        <h2 class="text-3xl font-extrabold mb-6 text-center text-slate-900 dark:text-white">Post New Assignment</h2>
+        <form id="assignment-form" class="space-y-5">
+            <div>
+                <label for="assignment-title" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Assignment Title</label>
+                <input type="text" id="assignment-title" name="title" required class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+            </div>
+            <div>
+                <label for="assignment-deadline" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Deadline (e.g., Nov 30, 2024)</label>
+                <input type="text" id="assignment-deadline" name="deadline" required class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+            </div>
+            <button type="submit" id="assignment-form-submit-btn" class="bg-orange-600 text-white font-bold py-3 px-6 rounded-lg w-full hover:bg-orange-700 transition duration-200 shadow-lg active:scale-95">Publish Assignment</button>
+        </form>
+        <button id="assignment-modal-close-btn" class="absolute top-4 right-4 bg-red-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-extrabold hover:bg-red-700 transition-colors shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+    </div>
+</div>
+
+<div id="contact-modal-backdrop" class="hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div id="contact-modal-content" class="bg-white rounded-3xl p-8 max-w-sm w-full relative shadow-2xl border-4 border-yellow-400 transform transition-all duration-300 scale-100 dark:bg-slate-700">
+        <h2 class="text-3xl font-extrabold mb-6 text-center text-slate-900 dark:text-white">Contact School Admin</h2>
+        <form id="contact-form" class="space-y-5">
+            <div>
+                <label for="contact-subject" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Subject</label>
+                <input type="text" id="contact-subject" name="subject" required class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+            </div>
+            <div>
+                <label for="contact-message" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Your Message</label>
+                <textarea id="contact-message" name="message" rows="4" required class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white"></textarea>
+            </div>
+            <button type="submit" id="contact-form-submit-btn" class="bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg w-full hover:bg-yellow-700 transition duration-200 shadow-lg active:scale-95">Send Message</button>
+        </form>
+        <button id="contact-modal-close-btn" class="absolute top-4 right-4 bg-red-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-extrabold hover:bg-red-700 transition-colors shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+    </div>
+</div>
+
+<div id="message-send-modal-backdrop" class="hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div id="message-send-modal-content" class="bg-white rounded-3xl p-8 max-w-sm w-full relative shadow-2xl border-4 border-slate-500 transform transition-all duration-300 scale-100 dark:bg-slate-700">
+        <h2 id="message-send-title" class="text-3xl font-extrabold mb-6 text-center text-slate-900 dark:text-white">Compose Message</h2>
+        <form id="message-send-form" class="space-y-5">
+            <div>
+                <label for="message-send-subject" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Subject</label>
+                <input type="text" id="message-send-subject" name="subject" required class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white">
+            </div>
+            <div>
+                <label for="message-send-text" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Message</label>
+                <textarea id="message-send-text" name="message" rows="4" required class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 p-3 transition-colors dark:bg-slate-600 dark:border-slate-500 dark:text-white"></textarea>
+            </div>
+            <button type="submit" id="message-send-form-submit-btn" class="bg-slate-600 text-white font-bold py-3 px-6 rounded-lg w-full hover:bg-slate-700 transition duration-200 shadow-lg active:scale-95">Send</button>
+        </form>
+        <button id="message-send-modal-close-btn" class="absolute top-4 right-4 bg-red-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-extrabold hover:bg-red-700 transition-colors shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

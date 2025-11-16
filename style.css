@@ -1,0 +1,12 @@
+body {
+    font-family: 'Inter', sans-serif;
+    /* Ensure smooth font rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Updated for Dark Theme visibility */
+.shadow-custom {
+    /* A softer, inward-looking shadow for dark elements on a dark background (neomorphism style) */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.03);
+}
